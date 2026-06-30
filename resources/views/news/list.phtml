@@ -1,0 +1,118 @@
+<?php
+
+declare(strict_types=1);
+
+use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Timestamp;
+use Fisharebest\Webtrees\Tree;
+use Illuminate\Support\Collection;
+
+/**
+ * @var Collection<int,object{subject:string,body:string,updated:Timestamp,news_id:string,is_unread:bool}> $articles
+ * @var string                                                                            $filter
+ * @var int                                                                               $goto
+ * @var string                                                                            $module_name
+ * @var string                                                                            $search
+ * @var string                                                                            $title
+ * @var Tree                                                                              $tree
+ */
+
+?>
+
+<h2 class="wt-page-title"><span class="user-news-icon" aria-hidden="true"></span> <?= $title ?></h2>
+
+<?php if (Auth::isAdmin()) : ?>
+    <div class="mb-3">
+        <a class="btn btn-primary" href="<?= e(route('module', ['module' => $module_name, 'action' => 'Edit', 'tree' => $tree->name()])) ?>">
+            <?= view('icons/add') ?>
+            <?= I18N::translate('Add a news article') ?>
+        </a>
+    </div>
+<?php endif ?>
+
+<form class="row g-2 align-items-end mb-4" method="get" action="<?= e(route('module', ['module' => $module_name, 'action' => 'Show', 'tree' => $tree->name()])) ?>">
+    <div class="col-12 col-md-3">
+        <label class="form-label" for="user-news-filter">
+            <?= I18N::translate('Filter') ?>
+        </label>
+        <select id="user-news-filter" name="filter" class="form-select">
+            <?php
+            $filters = [
+                'all'    => I18N::translate('All news'),
+                'unread' => I18N::translate('Unread news'),
+            ];
+            if (Auth::isAdmin()) {
+                $filters['mine'] = I18N::translate('My news');
+            }
+            ?>
+            <?php foreach ($filters as $value => $label) : ?>
+                <option value="<?= e($value) ?>" <?= $filter === $value ? 'selected' : '' ?>>
+                    <?= $label ?>
+                </option>
+            <?php endforeach ?>
+        </select>
+    </div>
+
+    <div class="col-12 col-md-5">
+        <label class="form-label" for="user-news-search">
+            <?= I18N::translate('Search') ?>
+        </label>
+        <input type="search" id="user-news-search" name="search" class="form-control" value="<?= e($search) ?>">
+    </div>
+
+    <div class="col-12 col-md-3">
+        <label class="form-label" for="user-news-goto">
+            <?= I18N::translate('Go to ID') ?>
+        </label>
+        <input type="number" id="user-news-goto" name="goto" class="form-control" min="1" value="<?= $goto > 0 ? e((string) $goto) : '' ?>">
+    </div>
+
+    <div class="col-12 col-md-1">
+        <button class="btn btn-outline-secondary w-100" type="submit">
+            <?= I18N::translate('Apply filters') ?>
+        </button>
+    </div>
+</form>
+
+<?php if ($articles->isEmpty()) : ?>
+    <div class="alert alert-info">
+        <?= ($filter !== 'all' || $search !== '') ? I18N::translate('No news articles match your filters.') : I18N::translate('No news articles have been submitted.') ?>
+    </div>
+<?php endif ?>
+
+<?php foreach ($articles as $article) : ?>
+    <article class="card mb-3 user-news-card<?= $article->is_unread ? ' user-news-card-unread' : '' ?>" id="news-<?= e($article->news_id) ?>">
+        <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <span class="badge bg-secondary">
+                    <?= I18N::translate('News number %s', I18N::number((int) $article->news_id)) ?>
+                </span>
+                <?php if ($article->is_unread) : ?>
+                    <span class="badge bg-danger"><?= I18N::translate('New') ?></span>
+                <?php endif ?>
+                <div class="fw-semibold" dir="auto"><?= e($article->subject) ?></div>
+            </div>
+            <div class="small text-muted"><?= view('components/datetime', ['timestamp' => $article->updated]) ?></div>
+        </div>
+
+        <div class="card-body" dir="auto"><?= $article->body ?></div>
+
+        <?php if (Auth::isAdmin()) : ?>
+            <div class="card-footer d-flex flex-wrap gap-2">
+                <a class="btn btn-outline-primary btn-sm" href="<?= e(route('module', ['module' => $module_name, 'action' => 'Edit', 'news_id' => $article->news_id, 'tree' => $tree->name()])) ?>">
+                    <?= view('icons/edit') ?>
+                    <?= I18N::translate('Edit') ?>
+                </a>
+                <form method="post" action="<?= e(route('module', ['module' => $module_name, 'action' => 'Delete', 'news_id' => $article->news_id, 'tree' => $tree->name()])) ?>">
+                    <button class="btn btn-outline-danger btn-sm" type="submit" data-wt-confirm="<?= e(I18N::translate('Are you sure you want to delete “%s”?', $article->subject)) ?>">
+                        <?= view('icons/delete') ?>
+                        <?= I18N::translate('Delete') ?>
+                    </button>
+
+                    <?= csrf_field() ?>
+                </form>
+            </div>
+        <?php endif ?>
+    </article>
+<?php endforeach ?>

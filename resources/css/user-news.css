@@ -1,0 +1,50 @@
+.user-news-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background: transparent var(--user-news-icon-url) center / contain no-repeat;
+  vertical-align: -0.1em;
+}
+
+.user-news-icon:before {
+  content: "";
+}
+
+.menu-user-news .nav-link {
+  position: relative;
+}
+
+.menu-user-news .nav-link:before {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 0.15rem;
+  background: transparent var(--user-news-icon-url) center / contain no-repeat;
+  filter: drop-shadow(0 0 0.2rem rgba(220, 53, 69, 0.35));
+  vertical-align: middle;
+}
+
+.menu-user-news-has-updates .nav-link:before {
+  filter: drop-shadow(0 0 0.35rem rgba(220, 53, 69, 0.85));
+}
+
+.menu-user-news-has-updates .nav-link:after {
+  content: "";
+  position: absolute;
+  top: 0.2rem;
+  right: 0.35rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 0.125rem solid #fff;
+  border-radius: 50%;
+  background: #dc3545;
+}
+
+.user-news-card-unread {
+  border-left: 0.35rem solid #dc3545;
+}
+
+.user-news-card-unread > .card-header {
+  background: rgba(220, 53, 69, 0.08);
+}
