@@ -193,4 +193,4 @@ The module uses the webtrees HTML editor. If the editor fails to load, check whe
 
 ## License
 
-GPL-3.0-or-later. See [LICENSE.md](LICENSE.md).
+GPL-3.0-or-later. See [LICENSE](LICENSE).
