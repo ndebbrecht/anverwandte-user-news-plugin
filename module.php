@@ -45,8 +45,7 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
     use ModuleCustomTrait;
     use ModuleMenuTrait;
 
-    private const string VIEW_NAMESPACE = 'user-news-plugin';
-
+    private const VIEW_NAMESPACE = 'user-news-plugin';
     private HtmlService $html_service;
 
     protected int $access_level = Auth::PRIV_PRIVATE;
@@ -96,7 +95,6 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
             return [
                 'User news' => 'Nachrichten',
                 'Anverwandte' => 'Anverwandte',
-                'Consistency checks' => 'Konsistenzprüfungen',
                 'News for signed-in users, written by administrators.' => 'Nachrichten für angemeldete Benutzer, geschrieben von Administratoren.',
                 'No news articles have been submitted.' => 'Es wurden keine Nachrichten erstellt.',
                 'No news articles match your filters.' => 'Es wurden keine passenden Nachrichten gefunden.',
@@ -128,7 +126,6 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
             return [
                 'User news' => 'News',
                 'Anverwandte' => 'Anverwandte',
-                'Consistency checks' => 'Consistency checks',
                 'News for signed-in users, written by administrators.' => 'News for signed-in users, written by administrators.',
                 'No news articles have been submitted.' => 'No news articles have been submitted.',
                 'No news articles match your filters.' => 'No news articles match your filters.',
@@ -177,23 +174,11 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
             $news_label .= ' <span class="badge bg-danger ms-1">' . I18N::number($unread) . '</span>';
         }
 
-        $news_menu = new Menu($news_label, route('module', [
+        return new Menu($news_label, route('module', [
             'module' => $this->name(),
             'action' => 'Show',
             'tree'   => $tree->name(),
-        ]));
-
-        $consistency_menu = new Menu(I18N::translate('Consistency checks'), '#', 'disabled', [
-            'aria-disabled' => 'true',
-            'tabindex'      => '-1',
-        ]);
-
-        $menu_class = $unread > 0 ? 'menu-user-news menu-user-news-has-updates' : 'menu-user-news';
-
-        return new Menu(I18N::translate('Anverwandte'), '#', $menu_class, [], [
-            $news_menu,
-            $consistency_menu,
-        ]);
+        ]), $unread > 0 ? 'menu-user-news menu-user-news-has-updates' : 'menu-user-news');
     }
 
     public function headContent(): string
@@ -454,6 +439,7 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
     {
         return 'user_news_last_read_' . $tree->id();
     }
+
 }
 
 return new UserNewsPluginModule(Registry::container()->get(HtmlService::class));

@@ -1,13 +1,12 @@
 # webtrees User News Plugin
 
-Custom menu/news module for [webtrees](https://www.webtrees.net/). It adds a signed-in-only `Anverwandte` menu with a `News`/`Nachrichten` section. Administrators can create, edit, and delete news items; signed-in users can read them. Guests do not see the menu and cannot access the news page.
+Custom menu/news module for [webtrees](https://www.webtrees.net/). It adds a signed-in-only `News`/`Nachrichten` menu entry. Administrators can create, edit, and delete news items; signed-in users can read them. Guests do not see the menu and cannot access the news page.
 
 The module was originally built for the Anverwandte webtrees installation, but it can be installed as a normal custom webtrees module.
 
 ## Features
 
-- Top-level `Anverwandte` menu for signed-in users.
-- `News` / `Nachrichten` submenu.
+- `News` / `Nachrichten` menu entry for signed-in users.
 - Menu badge for unread news items.
 - Red visual menu indicator when unread items exist.
 - Administrator workflow for creating, editing, and deleting news.
@@ -109,8 +108,8 @@ After updating, open webtrees as an administrator and verify that the module is 
 Use a backup or test installation first.
 
 1. Sign in as an administrator.
-2. Confirm that the top-level `Anverwandte` menu is visible.
-3. Open **Anverwandte -> Nachrichten**.
+2. Confirm that the `News` / `Nachrichten` menu entry is visible.
+3. Open **News** / **Nachrichten**.
 4. Create a test news item.
 5. Confirm that the news item appears in the list.
 6. Confirm that the news item has a visible news number.
