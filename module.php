@@ -48,7 +48,7 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
     private const VIEW_NAMESPACE = 'user-news-plugin';
     private HtmlService $html_service;
 
-    protected int $access_level = Auth::PRIV_USER;
+    protected int $access_level = Auth::PRIV_PRIVATE;
 
     public function __construct(HtmlService $html_service)
     {
