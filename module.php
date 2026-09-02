@@ -48,7 +48,7 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
     private const VIEW_NAMESPACE = 'user-news-plugin';
     private HtmlService $html_service;
 
-    protected int $access_level = Auth::PRIV_PRIVATE;
+    protected int $access_level = Auth::PRIV_USER;
 
     public function __construct(HtmlService $html_service)
     {
@@ -163,7 +163,7 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
 
     public function getMenu(Tree $tree): Menu|null
     {
-        if (!Auth::check()) {
+        if (!$this->canAccessMenu($tree)) {
             return null;
         }
 
@@ -198,7 +198,7 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
     {
         $tree = Validator::attributes($request)->tree();
 
-        if (!Auth::check()) {
+        if (!$this->canAccessMenu($tree)) {
             throw new HttpAccessDeniedException();
         }
 
@@ -288,7 +288,7 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
     {
         $tree = Validator::attributes($request)->tree();
 
-        if (!Auth::isAdmin()) {
+        if (!$this->canAccessMenu($tree) || !Auth::isAdmin()) {
             throw new HttpAccessDeniedException();
         }
 
@@ -332,7 +332,7 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
     {
         $tree = Validator::attributes($request)->tree();
 
-        if (!Auth::isAdmin()) {
+        if (!$this->canAccessMenu($tree) || !Auth::isAdmin()) {
             throw new HttpAccessDeniedException();
         }
 
@@ -388,7 +388,7 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
         $tree    = Validator::attributes($request)->tree();
         $news_id = Validator::queryParams($request)->integer('news_id');
 
-        if (!Auth::isAdmin()) {
+        if (!$this->canAccessMenu($tree) || !Auth::isAdmin()) {
             throw new HttpAccessDeniedException();
         }
 
@@ -438,6 +438,12 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
     private function lastReadPreference(Tree $tree): string
     {
         return 'user_news_last_read_' . $tree->id();
+    }
+
+    private function canAccessMenu(Tree $tree): bool
+    {
+        return Auth::check()
+            && $this->accessLevel($tree, ModuleMenuInterface::class) >= Auth::accessLevel($tree);
     }
 
 }
