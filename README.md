@@ -6,7 +6,9 @@ The module was originally built for the Anverwandte webtrees installation, but i
 
 ## Features
 
-- `News` / `Nachrichten` menu entry for signed-in users.
+- `News` / `Nachrichten` menu entry for signed-in users when installed alone.
+- If installed together with the Anverwandte consistency-check module, the
+  news entry is provided as a submenu below the shared `Anverwandte` menu.
 - Menu badge for unread news items.
 - Red visual menu indicator when unread items exist.
 - Administrator workflow for creating, editing, and deleting news.

@@ -163,6 +163,14 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
 
     public function getMenu(Tree $tree): Menu|null
     {
+        if (
+            class_exists('AnverwandteConsistencyChecksModule')
+            && method_exists('AnverwandteConsistencyChecksModule', 'providesAnverwandteMenu')
+            && AnverwandteConsistencyChecksModule::providesAnverwandteMenu()
+        ) {
+            return null;
+        }
+
         if (!$this->canAccessMenu($tree)) {
             return null;
         }
@@ -417,6 +425,11 @@ class UserNewsPluginModule extends AbstractModule implements ModuleCustomInterfa
         }
 
         Auth::user()->setPreference($this->lastReadPreference($tree), $latest);
+    }
+
+    public function unreadMenuCount(Tree $tree): int
+    {
+        return $this->unreadCount($tree);
     }
 
     private function unreadCount(Tree $tree): int
